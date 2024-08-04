@@ -11,6 +11,8 @@ app.use(express.static('public'));
 // 라우트 파일 불러오기
 const routes = require('./routes');
 
+
+
 // 라우트 사용
 app.use('/', routes);
 
