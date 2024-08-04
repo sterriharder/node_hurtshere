@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>어디아퍼?</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: #020c14;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: rgb(255, 255, 255);
+        }
+        #chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #060a0e;
+            border-radius: 10px;
+            overflow-y: scroll;
+            height: calc(100vh - 150px);
+            padding: 20px;
+        }
+        .message {
+            max-width: 70%;
+            margin-bottom: 10px;
+            clear: both;
+        }
+        .user-message {
+            float: right;
+            background-color: #ffeb33;
+            border-radius: 10px 0 10px 10px;
+        }
+        .ai-message {
+            float: left;
+            background-color: #ffffff;
+            border-radius: 0 10px 10px 10px;
+        }
+        .message-content {
+            padding: 10px;
+            font-size: 16px;
+        }
+        #input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 10px;
+            display: flex;
+        }
+        #user-input {
+            flex-grow: 1;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+        }
+        #send-button {
+            background-color: #ffeb33;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #home-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, transform 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #home-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>대체 어디가 아픈게냐?</h1>
+    <button id="home-button" onclick="goHome()">🚀</button>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="증상을 말해보세요...">
+        <button id="send-button" onclick="sendMessage()">➤</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value;
+            userInput.value = '';
+
+            // 사용자 메시지 표시
+            displayMessage('user', message);
+
+            // 서버에 메시지 전송
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'service-gbn': 'hh'
+                },
+                body: JSON.stringify({ message }),
+            });
+
+            const data = await response.json();
+
+            // AI 응답 표시
+            displayMessage('ai', data.reply);
+        }
+
+        function displayMessage(sender, message) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+            
+            const contentElement = document.createElement('div');
+            contentElement.classList.add('message-content');
+            contentElement.textContent = message;
+            
+            messageElement.appendChild(contentElement);
+            chatContainer.appendChild(messageElement);
+            
+            // 스크롤을 최신 메시지로 이동
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Enter 키로 메시지 전송
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function goHome() {
+            window.location.href = '/'; // 홈페이지 URL로 변경하세요
+        }
+    </script>
+</body>
+</html>
