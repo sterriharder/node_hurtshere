@@ -115,4 +115,8 @@ function startGame() {
     difficultyInterval = setInterval(increaseDifficulty, 5000);
 }
 
+function goHome() {
+    window.location.href = '/'; // 홈페이지 URL로 변경하세요
+}
+
 startGame();
