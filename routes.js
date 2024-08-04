@@ -9,13 +9,18 @@ router.get('/', (req, res) => {
     res.render(__dirname + '/public/index.html');
 });
 
+// route '/view/dung'
+router.get('/dung', (req, res) => {
+    res.sendFile(__dirname + '/public/dung.html');
+});
+
 // route '/view/anyquestion'
-router.get('/view/anyquery', (req, res) => {
+router.get('/anyquery', (req, res) => {
     res.sendFile(__dirname + '/public/anyquery.html');
 });
 
 // route '/view/hurtshere'
-router.get('/view/hurtshere', (req, res) => {
+router.get('/hurtshere', (req, res) => {
     res.sendFile(__dirname + '/public/hurtshere.html');
 });
 
