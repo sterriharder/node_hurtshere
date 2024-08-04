@@ -33,7 +33,7 @@ router.post('/chat', async (req, res) => {
                             + "그리고 증상이나 몸상태, 건강, 병원과 관련 없는 질문에는 이렇게 답해줘. "
                             + "'몸상태나 증상, 병원과 관련된 질문만 부탁드려요😁' ";
         }
-console.log(systemMessage);
+
         const userMessage = req.body.message;
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
@@ -46,6 +46,10 @@ console.log(systemMessage);
                 'Authorization': `Bearer ${OPENAI_API_KEY}`,
                 'Content-Type': 'application/json',
             },
+            temperature: 1,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
         });
 
         const reply = response.data.choices[0].message.content;
